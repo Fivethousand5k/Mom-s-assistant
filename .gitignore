@@ -2,3 +2,7 @@ data
 venv
 .idea
 __pycache__
+build
+dist
+*.exe
+*.spec

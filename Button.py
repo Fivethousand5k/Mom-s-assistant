@@ -1,9 +1,10 @@
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QFileDialog
 from read_excel import handler_excel
 
 class Button(QPushButton):
+    text_signal=pyqtSignal(str)
 
     def __init__(self, title, parent,label_address=None):
         super().__init__(title, parent)
@@ -17,10 +18,11 @@ class Button(QPushButton):
         self.label_address=label_address
 
 
+
     def select_file(self):
         self.text,_ =  QFileDialog.getOpenFileName(self, '选择文件', '.')
-
-        self.label_address.setText(self.text)
+        self.text=self.text.replace("file:///","")
+        self.text_signal.emit(self.text)
     def dragEnterEvent(self, e):
 
         # if e.mimeData().hasFormat('text/plain'):
@@ -32,6 +34,8 @@ class Button(QPushButton):
     def dropEvent(self, e):
         print(e.mimeData().text())
         self.text=e.mimeData().text()
+        self.text = self.text.replace("file:///", "")
+        self.text_signal.emit(self.text)
     def parse_excel1(self,time_range=3):
         if self.text != None and self.text!='':
             self.text=self.text.replace("file:///","")
